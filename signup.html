@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - G-Mart</title>
+    <link rel="stylesheet" href="stylesheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+
+<div class="form-page-container">
+    <div class="form-box">
+        <form method="post" action="signup.php">
+            <div class="form-fields">
+                <label for="first-name">First Name</label>
+                <input type="text" id="first-name" name="first_name">
+                
+                <label for="last-name">Last Name</label>
+                <input type="text" id="last-name" name="last_name">
+
+                <label for="orc-id">ORC ID</label>
+                <input type="text" id="orc-id" name="orc_id">
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password">
+
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm_password">
+
+                <label for="qualification">Qualification</label>
+                <select id="qualification" name="qualification">
+                    <option value="">Select Degree</option>
+                    <option value="Bachelors">Bachelors</option>
+                    <option value="Masters">Masters</option>
+                    <option value="PhD">PhD</option>
+                    <option value="Post-Doctoral">Post-Doctoral</option>
+                </select>
+
+                <label for="affiliation">Affiliation</label>
+                <select id="affiliation" name="affiliation">
+                    <option value="">Select University</option>
+                    <option value="Harvard University">Harvard University</option>
+                    <option value="Massachusetts Institute of Technology (MIT)">Massachusetts Institute of Technology (MIT)</option>
+                    <option value="Stanford University">Stanford University</option>
+                    <option value="California Institute of Technology (Caltech)">California Institute of Technology (Caltech)</option>
+                    <option value="Yale University">Yale University</option>
+                    <option value="Princeton University">Princeton University</option>
+                    <option value="Columbia University">Columbia University</option>
+                    <option value="University of Pennsylvania">University of Pennsylvania</option>
+                    <option value="University of Chicago">University of Chicago</option>
+                    <option value="University of Rochester">University of Rochester</option>
+                    <option value="Duke University">Duke University</option>
+                    <option value="Johns Hopkins University">Johns Hopkins University</option>
+                    <option value="Northwestern University">Northwestern University</option>
+                    <option value="Cornell University">Cornell University</option>
+                    <option value="University of California, Berkeley">University of California, Berkeley</option>
+                    <option value="University of California, Los Angeles (UCLA)">University of California, Los Angeles (UCLA)</option>
+                    <option value="University of Michigan">University of Michigan</option>
+                    <option value="Carnegie Mellon University">Carnegie Mellon University</option>
+                    <option value="University of Washington">University of Washington</option>
+                    <option value="University of Texas at Austin">University of Texas at Austin</option>
+                    <option value="University of Virginia">University of Virginia</option>
+                </select>
+
+
+                <button type="submit"class = 'buttons'>Sign Up</button>
+
+            </div>
+        </form>
+
+        <div class="rheader">
+            <h1>Sign Up</h1>
+                <div class="rlogo"><a href="index.php"><i class="fa-sharp fa-solid fa-dna"></i> G-Mart</a></div>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+</body>
+</html>

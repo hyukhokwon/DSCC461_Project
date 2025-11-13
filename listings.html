@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genome Listings - G-Mart</title>
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body>
+
+    <header class="listings-header">
+        <form action="listings.php" method="get" class="search-form">
+            <input type="text" name="query" placeholder="Search by assembly name..." value="<?php echo htmlspecialchars($search_query); ?>">
+            <button type="submit">🔍</button>
+        </form>
+        <div class="header-cart-icon">
+            <a>🛒</a>
+        </div>
+    </header>
+
+    <div class="content-container">
+
+        <?php if ($result->num_rows > 0): ?>
+            <?php while ($genome = $result->fetch_assoc()): ?>
+            
+            <div class="listing-item">
+
+                <h2>Genome ID: 
+                    <?php echo htmlspecialchars($genome['Genome_Id']); ?>
+                </h2>
+                
+                <div class="genome-details">
+                    <div>
+                        <span>Assembly Name:</span> 
+                        <?php echo htmlspecialchars($genome['Assembly_Name']); ?>
+                    </div>
+
+                    <div>
+                        <span>Assembly Level:</span> 
+                        <?php echo htmlspecialchars($genome['Level']); ?>
+                    </div>
+                    
+                    <div>
+                        <span>Chromosomes:</span> 
+                        <?php echo $genome['Chromosomes'] ?? '--'; ?>
+                    </div>
+
+                    <div>
+                        <span>Scaffolds:</span> 
+                        <?php echo $genome['Scaffolds'] ?? '--'; ?>
+                    </div>
+
+                    <div>
+                        <span>Contigs:</span> 
+                        <?php echo $genome['Contigs'] ?? '--'; ?>
+                    </div>
+                    
+                    <div>
+                        <span>GC Percent:</span> 
+                        <?php echo $genome['GC_Percent'] ? $genome['GC_Percent'] . '%' : '--'; ?>
+                    </div>
+
+                    <div>
+                        <span>Assembly release date:</span> 
+                        <?php echo $genome['Release_Date'] ?? '--'; ?>
+                    </div>
+                </div>
+                
+                <div class="listing-actions">
+                    <div class="price">
+                        $<?php echo number_format($genome['Price'], 2); ?>
+                    </div>
+
+                    <a class="add-to-cart">Add to cart</a>
+                </div>
+            </div>
+
+            <?php endwhile; ?>
+        <?php else: ?>
+            <p>No genomes found<?php echo !empty($search_query) ? ' matching "' . htmlspecialchars($search_query) . '"' : ''; ?>.</p>
+        <?php endif; ?>
+
+    </div>
+
+</body>
+</html>
