@@ -81,13 +81,16 @@ $cart_items = $_SESSION['cart_items']
                     ?>
                     <tr>
                         <td>
-                            <a href="" class="col-remove">Remove</a>
+                            <form action="removecart.php" method="POST" style="display:inline;">
+                                <input type="hidden" name="Genome_Id" value="<?php echo htmlspecialchars($item['Genome_Id']); ?>">
+                                <button type="submit" class="button-remove">Remove</button>
+                            </form>
                         </td>
                         <td class="col-qty">
                             <span class="qty-box"><?php echo (int)$item['Number_of_Genome']; ?></span>
                         </td>
                         <td class="col-item"><?php echo htmlspecialchars($item['Assembly_Name']); ?></td>
-                        <td class="col-price">$<?php echo number_format($item['Price'], 2); ?></td>
+                        <td class="col-price">$<?php echo number_format($item['Price']*$item['Number_of_Genome'], 2); ?></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>

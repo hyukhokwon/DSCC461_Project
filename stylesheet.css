@@ -137,6 +137,21 @@ body {
     transition: 0.3s;            
 }
 
+.button-remove {
+    background-color: #00aee7;   
+    color: black;   
+    padding: none;          
+    font-size: 16px;             
+    font-weight: bold;           
+    border: none;                
+    border-radius: none;          
+    cursor: pointer;             
+    transition: 0.3s;            
+}
+.button-remove:focus {
+  outline: none;
+}
+
 .listings-header .search-form input[type="text"] {
     border-right: none;
     border-radius: 8px 0 0 8px;
@@ -308,17 +323,46 @@ th.col-price {
     font-size: 1em;
     text-align: left;
 }
+
 a.col-remove {
     text-decoration: underline;
     color: black;
 }
-a.col-remove:hover {
-    color: #000;
-}
 
 .col-qty {
-    width: 10%;
-    text-align: left;
+    width: 120px;
+    display: flex;
+    justify-content: center;
+}
+
+.qty-controls {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;        
+}
+
+.qty-btn {
+    padding: 4px 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    border: none;
+    background: #00aee7;
+}
+
+
+.minus { 
+    background-color: none; 
+}
+.plus  { 
+    background-color: none; 
+}
+
+.qty-form {
+    display: inline; 
 }
 
 .qty-box {

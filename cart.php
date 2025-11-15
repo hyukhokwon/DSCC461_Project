@@ -84,6 +84,7 @@ $cart_items = $_SESSION['cart_items']
                     <tr>
                         <th class="col-remove"></th>
                         <th class="col-qty">Qty.</th>
+                        <th>ID</th>
                         <th class="col-item">Item</th>
                         <th class="col-price">Price</th>
                     </tr>
@@ -95,16 +96,32 @@ $cart_items = $_SESSION['cart_items']
                         $item_total = $item['Price'] * $item['Number_of_Genome'];
                         $subtotal += $item_total;
                     ?>
-                    <tr>
-                        <td>
-                            <a href="" class="col-remove">Remove</a>
-                        </td>
-                        <td class="col-qty">
-                            <span class="qty-box"><?php echo (int)$item['Number_of_Genome']; ?></span>
-                        </td>
-                        <td class="col-item"><?php echo htmlspecialchars($item['Assembly_Name']); ?></td>
-                        <td class="col-price">$<?php echo number_format($item['Price']*$item['Number_of_Genome'], 2); ?></td>
-                    </tr>
+                        <tr>
+                            <td>
+                                <form action="removecart.php" method="POST" style="display:inline;">
+                                    <input type="hidden" name="Genome_Id" value="<?php echo htmlspecialchars($item['Genome_Id']); ?>">
+                                    <button type="submit" class="button-remove">Remove</button>
+                                </form>
+                            </td>
+                            <td class="qty-controls">
+
+                                <form action="removeincart.php" method="POST" class="qty-form">
+                                    <input type="hidden" name="Genome_Id" value="<?= $item['Genome_Id'] ?>">
+                                    <button type="submit" class="qty-btn">−</button>
+                                </form>
+
+                                <span class="qty-box"><?= $item['Number_of_Genome']; ?></span>
+
+                                <form action="addincart.php" method="POST" class="qty-form">
+                                    <input type="hidden" name="Genome_Id" value="<?= $item['Genome_Id'] ?>">
+                                    <button type="submit" class="qty-btn">+</button>
+                                </form>
+
+                            </td>
+                            <td class='col-id'><?php echo htmlspecialchars($item['Genome_Id']); ?></td>
+                            <td class="col-item"><?php echo htmlspecialchars($item['Assembly_Name']); ?></td>
+                            <td class="col-price">$<?php echo number_format($item['Price']*$item['Number_of_Genome'], 2); ?></td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
