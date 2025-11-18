@@ -3,7 +3,7 @@ session_start();
 
 require 'db.php';
 
-$search_query = $_GET['query'] ?? ''; 
+$search_query = $_GET['query'] ?? '';
 $level_filter = $_GET['level'] ?? '';
 $min_price = $_GET['min_price'] ?? '';
 $max_price = $_GET['max_price'] ?? '';
@@ -16,8 +16,8 @@ if (empty($search_query)) {
     exit;
 }
 
-$sql = "SELECT 
-            a.Genome_Id, a.Assembly_Name, a.Level, a.Chromosomes, 
+$sql = "SELECT
+            a.Genome_Id, a.Assembly_Name, a.Level, a.Chromosomes,
             a.Scaffolds, a.Contigs, a.GC_Percent, a.Release_Date, a.Price,
             su.Company_Name, su.Number_of_Genomes
         FROM ASSEMBLY_STATISTICS a
@@ -121,7 +121,7 @@ $result = $stmt->get_result();
             height: 100%;
             background-color: rgba(0,0,0,0.5);
         }
-        
+
         .modal-content {
             background-color: white;
             margin: 5% auto;
@@ -132,7 +132,7 @@ $result = $stmt->get_result();
             max-height: 80vh;
             overflow-y: auto;
         }
-        
+
         .close-modal {
             color: #aaa;
             float: right;
@@ -140,27 +140,63 @@ $result = $stmt->get_result();
             font-weight: bold;
             cursor: pointer;
         }
-        
+
         .close-modal:hover {
             color: black;
         }
-        
+
         .rating-item {
             padding: 10px;
             border-bottom: 1px solid #eee;
             margin-bottom: 10px;
         }
-        
+
         .rating-comment {
             font-style: italic;
             color: #555;
         }
-        
+
         .no-ratings {
             text-align: center;
             color: #666;
             font-style: italic;
             padding: 20px;
+        }
+
+        /* Out of stock styles */
+        .out-of-stock {
+            background-color: #ffebee;
+            border: 2px solid #f44336;
+        }
+
+        .stock-warning {
+            color: #d32f2f;
+            font-weight: bold;
+            margin: 10px 0;
+            padding: 8px;
+            background-color: #ffcdd2;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .disabled-button {
+            background-color: #9e9e9e !important;
+            cursor: not-allowed !important;
+            opacity: 0.6;
+        }
+
+        .disabled-button:hover {
+            background-color: #9e9e9e !important;
+        }
+
+        .quantity-low {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .quantity-zero {
+            color: #f44336;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -183,7 +219,7 @@ $result = $stmt->get_result();
     <div class="filters-container">
         <form method="get" class="filter-form">
             <input type="hidden" name="query" value="<?php echo htmlspecialchars($search_query); ?>">
-            
+
             <div class="filter-group">
                 <label>Assembly Level:</label>
                 <select name="level">
@@ -216,68 +252,91 @@ $result = $stmt->get_result();
 
         <?php if ($result->num_rows > 0): ?>
             <?php while ($genome = $result->fetch_assoc()): ?>
-            <div class="listing-item">
+            <?php 
+            $quantity_available = (int)$genome['Number_of_Genomes'];
+            $is_out_of_stock = $quantity_available === 0;
+            $is_low_stock = $quantity_available > 0 && $quantity_available <= 5;
+            ?>
+            
+            <div class="listing-item <?php echo $is_out_of_stock ? 'out-of-stock' : ''; ?>">
 
                 <h2>Genome ID: <?php echo htmlspecialchars($genome['Genome_Id']); ?></h2>
-                
+
                 <div class="genome-details">
                     <div>
-                        <span>Assembly Name:</span> 
+                        <span>Assembly Name:</span>
                         <?php echo htmlspecialchars($genome['Assembly_Name']); ?>
                     </div>
 
                     <div>
-                        <span>Assembly Level:</span> 
+                        <span>Assembly Level:</span>
                         <?php echo htmlspecialchars($genome['Level']); ?>
                     </div>
-                    
+
                     <div>
-                        <span>Chromosomes:</span> 
+                        <span>Chromosomes:</span>
                         <?php echo $genome['Chromosomes']; ?>
                     </div>
 
                     <div>
-                        <span>Scaffolds:</span> 
+                        <span>Scaffolds:</span>
                         <?php echo $genome['Scaffolds']; ?>
                     </div>
 
                     <div>
-                        <span>Contigs:</span> 
+                        <span>Contigs:</span>
                         <?php echo $genome['Contigs']; ?>
                     </div>
-                    
+
                     <div>
-                        <span>GC Percent:</span> 
+                        <span>GC Percent:</span>
                         <?php  echo $genome['GC_Percent'] . '%'; ?>
                     </div>
 
                     <div>
-                        <span>Assembly release date:</span> 
+                        <span>Assembly release date:</span>
                         <?php echo $genome['Release_Date']; ?>
                     </div>
 
                     <div>
-                        <span>Seller:</span> 
+                        <span>Seller:</span>
                         <strong><?php echo htmlspecialchars($genome['Company_Name']); ?></strong>
                     </div>
 
                     <div>
-                        <span>Quantity Available:</span> 
-                        <?php echo (int)$genome['Number_of_Genomes']; ?>
+                        <span>Quantity Available:</span>
+                        <span class="<?php echo $is_out_of_stock ? 'quantity-zero' : ($is_low_stock ? 'quantity-low' : ''); ?>">
+                            <?php echo $quantity_available; ?>
+                            <?php if ($is_out_of_stock): ?>
+                                (Out of Stock)
+                            <?php elseif ($is_low_stock): ?>
+                                (Low Stock)
+                            <?php endif; ?>
+                        </span>
                     </div>
                 </div>
-                
+
                 <div class="listing-actions">
 
                     <div class="price">
                         $<?php echo number_format($genome['Price'], 2); ?>
                     </div>
 
-                    
-                    <form action="addcart.php" method="POST" style="display:inline;">
-                        <input type="hidden" name="Genome_Id" value="<?php echo htmlspecialchars($genome['Genome_Id']); ?>">
-                        <button type="submit" class="buttons">Add to cart</button>
-                    </form>
+                    <?php if ($is_out_of_stock): ?>
+                        <!-- Out of Stock - Show disabled button and message -->
+                        <div class="stock-warning">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Not enough quantity
+                        </div>
+                        <button type="button" class="buttons disabled-button" disabled>
+                            Out of Stock
+                        </button>
+                    <?php else: ?>
+                        <!-- In Stock - Show normal add to cart button -->
+                        <form action="addcart.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="Genome_Id" value="<?php echo htmlspecialchars($genome['Genome_Id']); ?>">
+                            <button type="submit" class="buttons">Add to cart</button>
+                        </form>
+                    <?php endif; ?>
 
                     <!-- MODIFIED: Clickable Seller Ratings -->
                     <a href="#" class="seller-ratings" onclick="showSellerRatings('<?php echo htmlspecialchars($genome['Company_Name']); ?>')">
@@ -295,7 +354,7 @@ $result = $stmt->get_result();
                     if (!empty($search_query)) {
                         echo ' matching "' . htmlspecialchars($search_query) . '"';
                     }?>.
-            </p>              
+            </p>
         <?php endif; ?>
 
         <div style="display: flex; justify-content: space-between; margin-top: 30px;">
@@ -333,7 +392,7 @@ $result = $stmt->get_result();
             document.getElementById('modalSellerName').textContent = 'Ratings for ' + companyName;
             document.getElementById('ratingsList').innerHTML = '<p>Loading ratings...</p>';
             document.getElementById('ratingsModal').style.display = 'block';
-            
+
             // Fetch ratings via AJAX
             fetch('get_seller_ratings.php?company=' + encodeURIComponent(companyName))
                 .then(response => response.text())
@@ -344,11 +403,11 @@ $result = $stmt->get_result();
                     document.getElementById('ratingsList').innerHTML = '<p class="no-ratings">Error loading ratings</p>';
                 });
         }
-        
+
         function closeSellerRatings() {
             document.getElementById('ratingsModal').style.display = 'none';
         }
-        
+
         // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('ratingsModal');
@@ -356,6 +415,16 @@ $result = $stmt->get_result();
                 closeSellerRatings();
             }
         }
+
+        // Prevent form submission for out of stock items
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.disabled-button').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Not enough quantity - This item is out of stock.');
+                });
+            });
+        });
     </script>
 
 </body>

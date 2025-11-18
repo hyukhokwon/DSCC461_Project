@@ -5,14 +5,14 @@ require 'db.php';
 $orc_id = $_SESSION['ORCID_Id'] ?? null;
 
 
-// if ($orc_id) {
-//     $sql = "DELETE FROM SHOPPING_CART WHERE ORCID_Id = ?";
-//     $stmt = $conn->prepare($sql);
-//     $stmt->bind_param("s", $orc_id);
-//     $stmt->execute();
+ if ($orc_id) {
+     $sql = "DELETE FROM SHOPPING_CART WHERE ORCID_Id = ?";
+     $stmt = $conn->prepare($sql);
+     $stmt->bind_param("s", $orc_id);
+     $stmt->execute();
     
-//     unset($_SESSION['cart_items']);
-// }
+     unset($_SESSION['cart_items']);
+ }
 
 ?>
 
