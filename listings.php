@@ -4,6 +4,12 @@ session_start();
 require 'db.php';
 
 $search_query = $_GET['query'] ?? ''; 
+$level_filter = $_GET['level'] ?? '';
+$min_price = $_GET['min_price'] ?? '';
+$max_price = $_GET['max_price'] ?? '';
+$min_gc = $_GET['min_gc'] ?? '';
+$max_gc = $_GET['max_gc'] ?? '';
+$seller_filter = $_GET['seller'] ?? '';
 
 if (empty($search_query)) {
     header("Location: index.php");
@@ -16,7 +22,53 @@ $sql = "SELECT
             su.Company_Name, su.Number_of_Genomes
         FROM ASSEMBLY_STATISTICS a
         JOIN SUPPLIES su ON a.Genome_Id = su.Genome_Id
-        JOIN SELLER se ON su.Company_Name = se.Company_Name";
+        JOIN SELLER se ON su.Company_Name = se.Company_Name
+        WHERE 1=1";
+
+$params = [];
+$types = '';
+
+if (!empty($search_query)) {
+    $sql .= " AND (a.Assembly_Name LIKE ?)";
+    $params[] = '%' . $search_query . '%';
+    $types .= 's';
+}
+
+if (!empty($level_filter)) {
+    $sql .= " AND a.Level = ?";
+    $params[] = $level_filter;
+    $types .= 's';
+}
+
+if (!empty($min_price) && is_numeric($min_price)) {
+    $sql .= " AND a.Price >= ?";
+    $params[] = $min_price;
+    $types .= 'd';
+}
+
+if (!empty($max_price) && is_numeric($max_price)) {
+    $sql .= " AND a.Price <= ?";
+    $params[] = $max_price;
+    $types .= 'd';
+}
+
+if (!empty($min_gc) && is_numeric($min_gc)) {
+    $sql .= " AND a.GC_Percent >= ?";
+    $params[] = $min_gc;
+    $types .= 'd';
+}
+
+if (!empty($max_gc) && is_numeric($max_gc)) {
+    $sql .= " AND a.GC_Percent <= ?";
+    $params[] = $max_gc;
+    $types .= 'd';
+}
+
+if (!empty($seller_filter)) {
+    $sql .= " AND su.Company_Name = ?";
+    $params[] = $seller_filter;
+    $types .= 's';
+}
 
 $limit = 100;
 
@@ -27,20 +79,23 @@ if (isset($_GET['page'])) {
 }
 $offset = ($page-1)*$limit;
 
+$sql .= " LIMIT ? OFFSET ?";
+$params[] = $limit;
+$params[] = $offset;
+$types .= 'ii';
 
-if (!empty($search_query)) {
-    $sql .= " WHERE (Assembly_Name LIKE ?)";
-} 
-
-$search_term = '%' . $search_query . '%'; 
-$sql .=  " LIMIT ? OFFSET ?";
 $stmt = $conn->prepare($sql);
 
 if ($stmt === false) {
     die("SQL Error: " . $conn->error);
 }
 
-$stmt->bind_param('sii', $search_term, $limit, $offset);
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+} else {
+    $stmt->bind_param('ii', $limit, $offset);
+}
+
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -54,11 +109,62 @@ $result = $stmt->get_result();
     <title>Genome Listings - G-Mart</title>
     <link rel="stylesheet" href="stylesheet.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
+    <style>
+        /* Modal styles for seller ratings */
+        .ratings-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover {
+            color: black;
+        }
+        
+        .rating-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+        
+        .rating-comment {
+            font-style: italic;
+            color: #555;
+        }
+        
+        .no-ratings {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-
-
 
     <header class="listings-header">
         <a href="index.php" class="header-logo">
@@ -73,6 +179,38 @@ $result = $stmt->get_result();
             <a href="cart.php"><i class="fa-sharp fa-solid fa-cart-shopping"></i></a>
         </div>
     </header>
+
+    <div class="filters-container">
+        <form method="get" class="filter-form">
+            <input type="hidden" name="query" value="<?php echo htmlspecialchars($search_query); ?>">
+            
+            <div class="filter-group">
+                <label>Assembly Level:</label>
+                <select name="level">
+                    <option value="">All Levels</option>
+                    <option value="Chromosome" <?php echo $level_filter=='Chromosome'?'selected':''; ?>>Chromosome</option>
+                    <option value="Scaffold" <?php echo $level_filter=='Scaffold'?'selected':''; ?>>Scaffold</option>
+                    <option value="Contig" <?php echo $level_filter=='Contig'?'selected':''; ?>>Contig</option>
+                    <option value="Complete" <?php echo $level_filter=='Complete'?'selected':''; ?>>Complete</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Price Range:</label>
+                <input type="number" name="min_price" placeholder="Min $" value="<?php echo htmlspecialchars($min_price); ?>" step="0.01" min="0">
+                <input type="number" name="max_price" placeholder="Max $" value="<?php echo htmlspecialchars($max_price); ?>" step="0.01" min="0">
+            </div>
+
+            <div class="filter-group">
+                <label>GC % Range:</label>
+                <input type="number" name="min_gc" placeholder="Min %" value="<?php echo htmlspecialchars($min_gc); ?>" min="0" max="100">
+                <input type="number" name="max_gc" placeholder="Max %" value="<?php echo htmlspecialchars($max_gc); ?>" min="0" max="100">
+            </div>
+
+            <button type="submit" class="filter-button">Apply Filters</button>
+            <a href="listings.php?query=<?php echo urlencode($search_query); ?>" class="clear-filters">Clear Filters</a>
+        </form>
+    </div>
 
     <div class="listings-container">
 
@@ -141,7 +279,8 @@ $result = $stmt->get_result();
                         <button type="submit" class="buttons">Add to cart</button>
                     </form>
 
-                    <a class='seller-ratings'>
+                    <!-- MODIFIED: Clickable Seller Ratings -->
+                    <a href="#" class="seller-ratings" onclick="showSellerRatings('<?php echo htmlspecialchars($genome['Company_Name']); ?>')">
                         View Seller Ratings
                     </a>
 
@@ -162,7 +301,7 @@ $result = $stmt->get_result();
         <div style="display: flex; justify-content: space-between; margin-top: 30px;">
 
             <?php if ($page > 1): ?>
-                <a href="listings.php?query=<?php echo urlencode($search_query); ?>&page=<?php echo $page - 1; ?>">
+                <a href="listings.php?query=<?php echo urlencode($search_query); ?>&level=<?php echo urlencode($level_filter); ?>&min_price=<?php echo urlencode($min_price); ?>&max_price=<?php echo urlencode($max_price); ?>&min_gc=<?php echo urlencode($min_gc); ?>&max_gc=<?php echo urlencode($max_gc); ?>&page=<?php echo $page - 1; ?>">
                     ← Previous
                 </a>
             <?php else: ?>
@@ -170,7 +309,7 @@ $result = $stmt->get_result();
             <?php endif; ?>
 
             <?php if ($result->num_rows === $limit): ?>
-                <a href="listings.php?query=<?php echo urlencode($search_query); ?>&page=<?php echo $page + 1; ?>">
+                <a href="listings.php?query=<?php echo urlencode($search_query); ?>&level=<?php echo urlencode($level_filter); ?>&min_price=<?php echo urlencode($min_price); ?>&max_price=<?php echo urlencode($max_price); ?>&min_gc=<?php echo urlencode($min_gc); ?>&max_gc=<?php echo urlencode($max_gc); ?>&page=<?php echo $page + 1; ?>">
                     Next →
                 </a>
             <?php endif; ?>
@@ -178,6 +317,46 @@ $result = $stmt->get_result();
         </div>
 
     </div>
+
+    <!-- Seller Ratings Modal -->
+    <div id="ratingsModal" class="ratings-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeSellerRatings()">&times;</span>
+            <h3 id="modalSellerName"></h3>
+            <div id="ratingsList"></div>
+        </div>
+    </div>
+
+    <script>
+        function showSellerRatings(companyName) {
+            // Show loading
+            document.getElementById('modalSellerName').textContent = 'Ratings for ' + companyName;
+            document.getElementById('ratingsList').innerHTML = '<p>Loading ratings...</p>';
+            document.getElementById('ratingsModal').style.display = 'block';
+            
+            // Fetch ratings via AJAX
+            fetch('get_seller_ratings.php?company=' + encodeURIComponent(companyName))
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('ratingsList').innerHTML = data;
+                })
+                .catch(error => {
+                    document.getElementById('ratingsList').innerHTML = '<p class="no-ratings">Error loading ratings</p>';
+                });
+        }
+        
+        function closeSellerRatings() {
+            document.getElementById('ratingsModal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('ratingsModal');
+            if (event.target == modal) {
+                closeSellerRatings();
+            }
+        }
+    </script>
 
 </body>
 </html>

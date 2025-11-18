@@ -14,10 +14,22 @@ $valid_login = true;
 
 
 if ($user = $result->fetch_assoc()) {
+    // TEMPORARY DEBUG CODE - VISIBLE ON PAGE
+    echo "<div style='background: yellow; padding: 10px; margin: 10px; border: 2px solid red;'>";
+    echo "<strong>DEBUG INFO:</strong><br>";
+    echo "User found: " . htmlspecialchars($user['First_Name']) . "<br>";
+    echo "Stored hash: " . htmlspecialchars($user['Password']) . "<br>";
+    echo "Password verify result: " . (password_verify($password, $user['Password']) ? 'TRUE' : 'FALSE');
+    echo "</div>";
+    
     if (password_verify($password, $user['Password'])) {
         $_SESSION['ORCID_Id'] = $user['ORCID_Id'];
         $_SESSION['First_Name'] = $user['First_Name'];
         $_SESSION['Last_Name'] = $user['Last_Name'];
+
+        // ADMIN PERMISSION
+        $_SESSION['role'] = $user['Role'];
+
         header("Location: index.php");
         exit;
     } else {
@@ -45,3 +57,4 @@ if (!$valid_login) {
     </html>';
     exit;
 }
+?>

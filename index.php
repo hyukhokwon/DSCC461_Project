@@ -2,10 +2,12 @@
 session_start();
 $logged_in = false;
 $user_name = '';
+$user_role = '';
 
 if (isset($_SESSION['First_Name'])) {
     $logged_in = true;
     $user_name = $_SESSION['First_Name'];
+    $user_role = $_SESSION['role'] ?? '';
 }
 ?>
 
@@ -23,6 +25,26 @@ if (isset($_SESSION['First_Name'])) {
     <div class="nav">
         <?php if ($logged_in): ?>
             <p style="font-weight: bold;">Hi, <?php echo htmlspecialchars($user_name); ?>!</p>
+            <!-- Role display - automatically determined from database -->
+            <?php if ($user_role === 'admin'): ?>
+                <p style="margin-top: 5px;">
+                    <a href="admin_dashboard.php" style="color: #ffeb3b; text-decoration: underline; font-weight: bold;">
+                        <i class="fa-sharp fa-solid fa-user-shield"></i> Admin Dashboard
+                    </a>
+                </p>
+            <?php elseif (!empty($user_role)): ?>
+                <p style="margin-top: 5px; color: #ccc; font-size: 0.9em;">
+                    Role: <?php echo htmlspecialchars($user_role); ?>
+                </p>
+            <?php endif; ?>
+            
+            <!-- NEW: Shopping Cart Link for Logged-in Users -->
+            <p style="margin-top: 10px;">
+                <a href="cart.php" style="color: white; text-decoration: underline; font-weight: bold;">
+                    <i class="fa-sharp fa-solid fa-cart-shopping"></i> View Shopping Cart
+                </a>
+            </p>
+            
             <a href="logout.php">Logout</a>
         <?php else: ?>
             <a href="signup.html">Sign Up</a> or <a href="login.html">Log-In</a>

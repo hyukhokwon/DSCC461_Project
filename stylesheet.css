@@ -426,3 +426,86 @@ a.col-remove {
     color: black;
     font-weight: bold;
 }
+
+/* ===== NEW ADMIN STYLES ADDED BELOW ===== */
+.admin-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid white;
+}
+
+.admin-title {
+    font-size: 2.5em;
+    color: white;
+    font-weight: bold;
+}
+
+.back-link {
+    color: white;
+    text-decoration: underline;
+    font-size: 1.1em;
+}
+
+.table-section {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.table-title {
+    font-size: 1.5em;
+    color: #00aee7;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #00aee7;
+    font-weight: bold;
+}
+
+.preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+.preview-table th {
+    background: #00aee7;
+    color: white;
+    padding: 10px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.preview-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #ddd;
+    color: black;
+}
+
+.preview-table tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.no-data {
+    color: #666;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
+
+.row-count {
+    color: #00aee7;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 0.8em;
+}

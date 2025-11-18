@@ -17,7 +17,7 @@ if (!$orc_id) {
             body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #00aee7; }
             .message { color: black; font-size: 1.5em; font-weight: bold; }
         </style>
-    </head>
+    </head>	
     <body>
         <div class="message">You must be logged-in to view shopping cart. Redirecting to login page...</div>
     </body>
@@ -29,7 +29,6 @@ if (!$orc_id) {
     $user_name = $_SESSION['First_Name'];
 }
 
-$sql = "SELECT s.Genome_Id, s.Number_of_Genome, a.Assembly_Name, a.Price
         FROM SHOPPING_CART s
         JOIN ASSEMBLY_STATISTICS a ON s.Genome_Id = a.Genome_Id
         WHERE s.ORCID_Id = ?";
