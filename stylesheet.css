@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #00aee7; 
+    background-color: #00aee7;
     color: white;
     margin: 0;
     padding: 0;
@@ -16,7 +16,6 @@ body {
     text-decoration: underline;
     font-size: 1.1em;
 }
-
 
 .center-container {
     display: flex;
@@ -58,17 +57,91 @@ body {
     cursor: pointer;
 }
 
+/* ===== SELL FORM STYLES ===== */
+.sell-form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 20px auto;
+    border: 3px solid black;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+    text-align: left;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #00aee7;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background: white;
+    color: black;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.submit-btn {
+    background-color: #00aee7;
+    color: black;
+    padding: 12px 24px;
+    border: 3px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #0099cc;
+}
+
+.success-message {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    border: 2px solid black;
+    font-weight: bold;
+    animation: fadeOut 5s ease-in-out forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; display: none; }
+}
+
 .form-page-container {
     display: flex;
-    justify-content: center;    
+    justify-content: center;
     align-items: flex-start;
     padding-top: 8vh;
 }
 
 .form-box {
     display: flex;
-    gap: 200px;                  
-    align-items: center;    
+    gap: 200px;
+    align-items: center;
 }
 
 .form-fields {
@@ -98,13 +171,12 @@ body {
 
 .rheader {
     display: flex;
-    flex-direction: column;   
-    align-items: center;    
+    flex-direction: column;
+    align-items: center;
     text-align: center;
     gap: 80px;
     font-weight: bold;
 }
-
 
 .rheader h1 {
     font-size: 4em;
@@ -125,28 +197,28 @@ body {
 }
 
 .buttons {
-    background-color: white;   
-    color: black;   
-    width: 130px;            
-    padding: 5px 10px;          
-    font-size: 16px;             
-    font-weight: bold;           
-    border: 3px solid black;                
-    border-radius: 5px;          
-    cursor: pointer;             
-    transition: 0.3s;            
+    background-color: white;
+    color: black;
+    width: 130px;
+    padding: 5px 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border: 3px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 .button-remove {
-    background-color: #00aee7;   
-    color: black;   
-    padding: none;          
-    font-size: 16px;             
-    font-weight: bold;           
-    border: none;                
-    border-radius: none;          
-    cursor: pointer;             
-    transition: 0.3s;            
+    background-color: #00aee7;
+    color: black;
+    padding: none;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: none;
+    cursor: pointer;
+    transition: 0.3s;
 }
 .button-remove:focus {
   outline: none;
@@ -160,75 +232,75 @@ body {
     border-radius: 0 8px 8px 0;
 }
 
-.listings-header { 
-    padding: 10px 40px; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    background-color:  #00aee7; 
-    border-bottom: 3px solid white; 
+.listings-header {
+    padding: 10px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color:  #00aee7;
+    border-bottom: 3px solid white;
     border-radius: 8px 8px 8px 8px;
 }
 
-.header-cart-icon a { 
-    font-size: 2.5em; 
-    color: black; 
-    text-decoration: none; 
+.header-cart-icon a {
+    font-size: 2.5em;
+    color: black;
+    text-decoration: none;
 }
 
-.listing-item { 
-    display: grid; 
-    grid-template-columns: 3fr 1fr; 
-    gap: 20px; 
-    padding: 25px 0; 
-    border-bottom: 2px solid white; 
-    align-items: start; 
+.listing-item {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 20px;
+    padding: 25px 0;
+    border-bottom: 2px solid white;
+    align-items: start;
 }
-.listing-item:last-child { 
-    border-bottom: none; 
+.listing-item:last-child {
+    border-bottom: none;
 }
 
-.listing-item h2 { 
-    grid-column: 1 / -1; 
-    margin: 0 0 15px 0; 
-    font-size: 1.5em; 
+.listing-item h2 {
+    grid-column: 1 / -1;
+    margin: 0 0 15px 0;
+    font-size: 1.5em;
     color: black;
 }
 
-.genome-details { 
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 10px; 
+.genome-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
 }
 
-.genome-details div { 
-    font-size: 1.1em; 
-    line-height: 1.5; 
+.genome-details div {
+    font-size: 1.1em;
+    line-height: 1.5;
 }
 
-.genome-details span { 
-    font-weight: bold; 
-    display: block; 
+.genome-details span {
+    font-weight: bold;
+    display: block;
 }
 
-.listing-actions { 
-    text-align: left; 
+.listing-actions {
+    text-align: left;
 }
 
-.listing-actions .price { 
-    font-size: 1.8em; 
-    font-weight: bold; 
-    margin-bottom: 15px; 
+.listing-actions .price {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 15px;
 }
 
-.listing-actions .add-to-cart { 
-    font-size: 1.2em; 
-    font-weight: bold; 
-    text-decoration: underline; 
-    color: black; 
+.listing-actions .add-to-cart {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-decoration: underline;
+    color: black;
 }
 
-.listing-actions a.seller-ratings { 
+.listing-actions a.seller-ratings {
     display: block;
     margin-top: 30px;
     font-style: italic;
@@ -236,27 +308,25 @@ body {
     color: black;
 }
 
-.listings-container { 
-    max-width: 1000px; 
-    margin: 20px auto; 
-    background-color: white; 
-    color: black; 
-    border-radius: 12px; 
-    padding: 30px 40px; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+.listings-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    background-color: white;
+    color: black;
+    border-radius: 12px;
+    padding: 30px 40px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-
-.cart-container { 
-    max-width: 1000px; 
-    margin: 20px auto; 
-    background-color: #00aee7; 
-    color: black; 
-    border-radius: 12px; 
-    padding: 30px 40px; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+.cart-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    background-color: #00aee7;
+    color: black;
+    border-radius: 12px;
+    padding: 30px 40px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
-
 
 .cart-title {
     font-size: 2.5em;
@@ -287,16 +357,16 @@ body {
 }
 
 th.col-price {
-    text-align: right; 
+    text-align: right;
 }
 
 .shopping-header {
     display: flex;
     justify-content: space-between; /* logo left, user-info right */
     align-items: center;
-    padding-top: 20px;  
-    padding-left: 15px; 
-    padding-right: 15px; 
+    padding-top: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .user-info {
@@ -305,12 +375,10 @@ th.col-price {
 }
 
 .header-logo {
-
     color: black;
     font-size: 1.5em;
     text-decoration: none;
     font-weight: bold;
-
 }
 
 .cart-table td {
@@ -336,11 +404,10 @@ a.col-remove {
 }
 
 .qty-controls {
-
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;        
+    gap: 8px;
 }
 
 .qty-btn {
@@ -353,16 +420,15 @@ a.col-remove {
     background: #00aee7;
 }
 
-
-.minus { 
-    background-color: none; 
+.minus {
+    background-color: none;
 }
-.plus  { 
-    background-color: none; 
+.plus  {
+    background-color: none;
 }
 
 .qty-form {
-    display: inline; 
+    display: inline;
 }
 
 .qty-box {
@@ -389,7 +455,7 @@ a.col-remove {
 .totals-section {
     width: 100%;
     max-width: 350px;
-    margin-left: auto; 
+    margin-left: auto;
     text-align: right;
     font-size: 1.3em;
     line-height: 1.7;
@@ -411,13 +477,12 @@ a.col-remove {
     margin-top: 10px;
 }
 
-
 .success-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-grow: 1; 
+    flex-grow: 1;
     text-align: center;
 }
 

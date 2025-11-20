@@ -9,6 +9,18 @@ if (isset($_SESSION['First_Name'])) {
     $user_name = $_SESSION['First_Name'];
     $user_role = $_SESSION['role'] ?? '';
 }
+
+// Check for success messages
+$message = '';
+if (isset($_GET['message'])) {
+    if ($_GET['message'] === 'supply_added') {
+        $message = 'Your genomes have been successfully listed on the marketplace!';
+    } elseif ($_GET['message'] === 'supply_updated') {
+        $message = 'Your supply has been successfully updated!';
+    } elseif ($_GET['message'] === 'company_not_found') {
+        $message = 'Error: Company name not found in our system. Please check your company name.';
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -37,14 +49,14 @@ if (isset($_SESSION['First_Name'])) {
                     Role: <?php echo htmlspecialchars($user_role); ?>
                 </p>
             <?php endif; ?>
-            
-            <!-- NEW: Shopping Cart Link for Logged-in Users -->
+
+            <!-- Shopping Cart Link -->
             <p style="margin-top: 10px;">
                 <a href="cart.php" style="color: white; text-decoration: underline; font-weight: bold;">
                     <i class="fa-sharp fa-solid fa-cart-shopping"></i> View Shopping Cart
                 </a>
             </p>
-            
+
             <a href="logout.php">Logout</a>
         <?php else: ?>
             <a href="signup.html">Sign Up</a> or <a href="login.html">Log-In</a>
@@ -52,8 +64,21 @@ if (isset($_SESSION['First_Name'])) {
     </div>
 
     <div class="center-container">
-        <div class="logo"><i class="fa-sharp fa-solid fa-dna"></i> G-Mart</div>
+        <?php if ($message): ?>
+            <div class="success-message" style="background-color: <?php echo strpos($message, 'Error') !== false ? '#ff4444' : '#4CAF50'; ?>; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center;">
+                <?php echo htmlspecialchars($message); ?>
+            </div>
+        <?php endif; ?>
         
+        <div class="logo"><i class="fa-sharp fa-solid fa-dna"></i> G-Mart</div>
+
+        <!-- SELL ON MARKETPLACE BUTTON - Available to everyone -->
+        <div style="margin: 20px 0;">
+            <a href="sell_form.php" style="display: inline-block; background-color: #4CAF50; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 1.2em; border: 3px solid black;">
+                <i class="fa-sharp fa-solid fa-store"></i> Sell On Marketplace
+            </a>
+        </div>
+
         <form class="search-form" action="listings.php" method="get">
             <input type="text" name="query" placeholder="Search by assembly name...">
             <button type="submit"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>

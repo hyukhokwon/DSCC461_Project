@@ -70,6 +70,9 @@ if (!empty($seller_filter)) {
     $types .= 's';
 }
 
+// ADD ORDER BY GENOME_ID HERE
+$sql .= " ORDER BY a.Genome_Id";
+
 $limit = 100;
 
 if (isset($_GET['page'])) {
@@ -252,12 +255,12 @@ $result = $stmt->get_result();
 
         <?php if ($result->num_rows > 0): ?>
             <?php while ($genome = $result->fetch_assoc()): ?>
-            <?php 
+            <?php
             $quantity_available = (int)$genome['Number_of_Genomes'];
             $is_out_of_stock = $quantity_available === 0;
             $is_low_stock = $quantity_available > 0 && $quantity_available <= 5;
             ?>
-            
+
             <div class="listing-item <?php echo $is_out_of_stock ? 'out-of-stock' : ''; ?>">
 
                 <h2>Genome ID: <?php echo htmlspecialchars($genome['Genome_Id']); ?></h2>
